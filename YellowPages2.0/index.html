@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project YellowPages - Unified Search Directory</title>
+    <meta name="description" content="A high-fidelity search directory bridging tech leaders, local businesses, and legacy archives with AI-enriched contact details.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0A0B10;
+            --card-bg: rgba(20, 21, 33, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(99, 102, 241, 0.4);
+            --text-primary: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --primary: #6366F1;
+            --primary-light: #8B5CF6;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent: #10B981;
+            --accent-glow: rgba(16, 185, 129, 0.15);
+            --danger: #EF4444;
+            --font-outfit: 'Outfit', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: var(--font-inter);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            border-bottom: 1px solid var(--card-border);
+            background: rgba(10, 11, 16, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-outfit);
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #FFF, #D1D5DB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .header-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .header-links a:hover {
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Hero Area */
+        .hero-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .hero-section h2 {
+            font-family: var(--font-outfit);
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #FFF 30%, #9CA3AF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            font-weight: 300;
+        }
+
+        /* Search & Filter Controls */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            position: sticky;
+            top: 80px;
+            z-index: 90;
+            background: var(--bg-color);
+            padding: 0.5rem 0;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.1rem 1.5rem 1.1rem 3.25rem;
+            font-size: 1.05rem;
+            background: rgba(15, 17, 26, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-family: var(--font-inter);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow), 0 4px 20px rgba(99, 102, 241, 0.1);
+            background: rgba(18, 20, 32, 0.95);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 1.2rem;
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 1.25rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .clear-search-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Filter Chips */
+        .filters-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 0.25rem;
+            scrollbar-width: none; /* Hide scrollbar for clean look */
+        }
+
+        .filters-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .filter-chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 0.45rem 1rem;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* Stats & Counts */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.75rem;
+        }
+
+        .stats-bar span strong {
+            color: var(--text-primary);
+        }
+
+        /* Grid Layout for Cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Card Design */
+        .entity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .entity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+        }
+
+        .entity-card.x-legacy-user::before {
+            background: linear-gradient(to right, #3B82F6, #1D4ED8);
+        }
+
+        .entity-card.local-business::before {
+            background: linear-gradient(to right, #10B981, #047857);
+        }
+
+        .entity-card.business::before {
+            background: linear-gradient(to right, #F59E0B, #D97706);
+        }
+
+        .entity-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+            background: rgba(22, 23, 38, 0.8);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .entity-name {
+            font-family: var(--font-outfit);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .category-tag {
+            font-size: 0.72rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .tag-x-legacy {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tag-local-business {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .tag-business {
+            background: rgba(245, 158, 11, 0.1);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .tag-other {
+            background: rgba(139, 92, 246, 0.1);
+            color: #A78BFA;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            flex: 1;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .info-icon {
+            color: var(--text-muted);
+            width: 16px;
+            text-align: center;
+            margin-top: 3px;
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .info-value a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .info-value a:hover {
+            text-decoration: underline;
+        }
+
+        .copyable {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .copyable:hover {
+            color: var(--text-primary);
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            background: #111827;
+            color: #FFF;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .copyable:hover .copy-tooltip {
+            opacity: 0.9;
+        }
+
+        .card-footer {
+            border-top: 1px solid var(--card-border);
+            padding-top: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .source-tag {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+
+        .quick-action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        /* Load More Button Container */
+        .load-more-container {
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0 3rem 0;
+        }
+
+        .load-more-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #FFFFFF;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-family: var(--font-outfit);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .load-more-btn:active {
+            transform: translateY(0);
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card-bg);
+            border: 1px dashed var(--card-border);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            background: rgba(10, 11, 16, 0.9);
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--text-primary);
+            text-decoration: underline;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #111827;
+            border: 1px solid var(--accent);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            color: var(--accent);
+        }
+
+        /* Responsive design Adjustments */
+        @media (max-width: 768px) {
+            header .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero-section h2 {
+                font-size: 2rem;
+            }
+
+            .controls-container {
+                top: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <div class="logo-icon">🗂️</div>
+                <div class="logo-text">
+                    <h1>Project YellowPages</h1>
+                    <p>User Finder Experience</p>
+                </div>
+            </div>
+            <div class="header-links">
+                <a href="mailto:User-Finder-Experience@proton.me" id="contactLink">
+                    ✉️ <span>User-Finder-Experience@proton.me</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h2>Unified Search Engine</h2>
+            <p>Search over 580+ AI-enriched company listings, local business contacts, and legacy social profiles.</p>
+        </section>
+
+        <section class="controls-container">
+            <div class="search-box-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by name, category, email, address, handle, or source..." autocomplete="off">
+                <button type="button" id="clearBtn" class="clear-search-btn" title="Clear search">✕</button>
+            </div>
+
+            <div class="filters-wrapper" id="filtersContainer">
+                <span class="filter-label">Quick filter:</span>
+                <button class="filter-chip active" data-filter="all" id="filterAll">All Entries</button>
+                <button class="filter-chip" data-filter="x-legacy user" id="filterXLegacy">X-Legacy Profiles</button>
+                <button class="filter-chip" data-filter="local business" id="filterLocal">Local Businesses</button>
+                <button class="filter-chip" data-filter="asset management" id="filterAsset">Asset Management</button>
+                <button class="filter-chip" data-filter="technology" id="filterTech">Technology</button>
+            </div>
+        </section>
+
+        <div class="stats-bar">
+            <span id="resultsCount">Showing <strong>0</strong> of <strong>0</strong> records</span>
+            <span id="categoryHighlight">Active filter: <strong>All</strong></span>
+        </div>
+
+        <section class="results-grid" id="resultsGrid" aria-live="polite">
+            <!-- Results will be loaded here dynamically -->
+        </section>
+
+        <div class="load-more-container" id="loadMoreContainer">
+            <button type="button" id="loadMoreBtn" class="load-more-btn">Load More Results</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>Project YellowPages &copy; 2026. Loosely inspired by Zip2. Contact: <a href="mailto:User-Finder-Experience@proton.me">User-Finder-Experience@proton.me</a></p>
+    </footer>
+
+    <!-- Toast popup for clipboard feedback -->
+    <div class="toast" id="toast" role="alert">
+        <span class="toast-icon">✓</span>
+        <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+
+    <!-- Load the data file -->
+    <script src="data.js"></script>
+
+    <script>
+        // Check if data loaded correctly
+        if (typeof searchData === 'undefined') {
+            console.error("Error: data.js failed to load or searchData is not defined.");
+            document.getElementById('resultsGrid').innerHTML = `
+                <div class="no-results">
+                    <span class="no-results-icon">⚠️</span>
+                    <h3>Data file (data.js) not found</h3>
+                    <p>Please make sure you have run the merge script to generate the database.</p>
+                </div>
+            `;
+            document.getElementById('loadMoreContainer').style.display = 'none';
+        } else {
+            initApp();
+        }
+
+        function initApp() {
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultsGrid = document.getElementById('resultsGrid');
+            const resultsCount = document.getElementById('resultsCount');
+            const categoryHighlight = document.getElementById('categoryHighlight');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            const filtersContainer = document.getElementById('filtersContainer');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            let filteredData = [...searchData];
+            let displayedCount = 0;
+            const itemsPerPage = 40;
+            let currentFilter = 'all';
+
+            // Initial render
+            performSearchAndFilter();
+
+            // Event Listeners
+            searchInput.addEventListener('input', () => {
+                if (searchInput.value.length > 0) {
+                    clearBtn.style.display = 'flex';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+                performSearchAndFilter();
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                performSearchAndFilter();
+                searchInput.focus();
+            });
+
+            loadMoreBtn.addEventListener('click', () => {
+                renderNextBatch();
+            });
+
+            // Filter Chips Event Delegation
+            filtersContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-chip')) {
+                    // Update active class
+                    document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    currentFilter = e.target.getAttribute('data-filter');
+                    
+                    // Update header label
+                    const label = e.target.textContent;
+                    categoryHighlight.innerHTML = `Active filter: <strong>${label}</strong>`;
+
+                    performSearchAndFilter();
+                }
+            });
+
+            // Unified filter and search handler
+            function performSearchAndFilter() {
+                const query = searchInput.value.toLowerCase().trim();
+                
+                filteredData = searchData.filter(item => {
+                    // 1. Apply category filter
+                    if (currentFilter !== 'all') {
+                        const itemCat = item.category.toLowerCase();
+                        if (currentFilter === 'x-legacy user' && itemCat !== 'x-legacy user') return false;
+                        if (currentFilter === 'local business' && itemCat !== 'local business') return false;
+                        if (currentFilter === 'asset management' && itemCat !== 'asset management') return false;
+                        if (currentFilter === 'technology' && itemCat !== 'technology') return false;
+                    }
+
+                    // 2. Apply text search query
+                    if (query) {
+                        return (
+                            item.name.toLowerCase().includes(query) ||
+                            item.category.toLowerCase().includes(query) ||
+                            item.email.toLowerCase().includes(query) ||
+                            item.phone.toLowerCase().includes(query) ||
+                            item.address.toLowerCase().includes(query) ||
+                            item.contact_person.toLowerCase().includes(query) ||
+                            item.website.toLowerCase().includes(query) ||
+                            item.source.toLowerCase().includes(query)
+                        );
+                    }
+
+                    return true;
+                });
+
+                // Reset grid and lazy loading counters
+                resultsGrid.innerHTML = '';
+                displayedCount = 0;
+                
+                // Update total stats
+                resultsCount.innerHTML = `Showing <strong>0</strong> of <strong>${filteredData.length}</strong> records`;
+
+                if (filteredData.length === 0) {
+                    resultsGrid.innerHTML = `
+                        <div class="no-results">
+                            <span class="no-results-icon">🕵️</span>
+                            <h3>No matches found</h3>
+                            <p>Try refining your search terms or selecting another category filter.</p>
+                        </div>
+                    `;
+                    loadMoreContainer.style.display = 'none';
+                } else {
+                    loadMoreContainer.style.display = 'block';
+                    renderNextBatch();
+                }
+            }
+
+            // Render next chunk of results
+            function renderNextBatch() {
+                const start = displayedCount;
+                const end = Math.min(start + itemsPerPage, filteredData.length);
+                const batch = filteredData.slice(start, end);
+
+                const fragment = document.createDocumentFragment();
+
+                batch.forEach(item => {
+                    const card = createEntityCard(item);
+                    fragment.appendChild(card);
+                });
+
+                resultsGrid.appendChild(fragment);
+                displayedCount = end;
+
+                // Update count label
+                resultsCount.innerHTML = `Showing <strong>${displayedCount}</strong> of <strong>${filteredData.length}</strong> records`;
+
+                // Toggle visibility of Load More button
+                if (displayedCount >= filteredData.length) {
+                    loadMoreContainer.style.display = 'none';
+                } else {
+                    loadMoreContainer.style.display = 'block';
+                }
+            }
+
+            // Helper to build HTML card element
+            function createEntityCard(item) {
+                const card = document.createElement('article');
+                
+                // Add specific class for colored top borders
+                let categoryClass = 'other';
+                let tagClass = 'tag-other';
+                const catLower = item.category.toLowerCase();
+                
+                if (catLower.includes('x-legacy')) {
+                    categoryClass = 'x-legacy-user';
+                    tagClass = 'tag-x-legacy';
+                } else if (catLower.includes('local business')) {
+                    categoryClass = 'local-business';
+                    tagClass = 'tag-local-business';
+                } else if (catLower.includes('business') || catLower.includes('management') || catLower.includes('technology')) {
+                    categoryClass = 'business';
+                    tagClass = 'tag-business';
+                }
+
+                card.className = `entity-card ${categoryClass}`;
+
+                // Process contacts
+                let emailHtml = '';
+                if (item.email) {
+                    const cleanEmail = item.email.split(' ')[0]; // Split off any (Request Access) text for the mailto link
+                    const isRequest = item.email.includes('Request Access') || cleanEmail.includes('proton.me');
+                    const link = isRequest ? 'mailto:User-Finder-Experience@proton.me?subject=Access%20Request%20for%20' + encodeURIComponent(item.name) : 'mailto:' + cleanEmail;
+                    
+                    emailHtml = `
+                        <div class="info-row">
+                            <span class="info-icon">✉️</span>
+                            <span class="info-value">
+                                <a href="${link}">${item.email}</a>
+                            </span>
+                        </div>
+                    `;
+                }
+
+                let phoneHtml = '';
+                if (item.phone) {
+                    // Extract clean digits for tel: link
+                    const cleanPhone = item.phone.replace(/[^0-9+]/g, '');
+                    phoneHtml = `
+                        <div class="info-row">
+                            <span class="info-icon">📞</span>
+                            <span class="info-value copyable" onclick="copyToClipboard('${item.phone}', 'Phone number copied!')">
+                                ${item.phone}
+                                <span class="copy-tooltip">Click to copy</span>
+                            </span>
+                        </div>
+                    `;
+                }
+
+                let addressHtml = '';
+                if (item.address) {
+                    const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.address);
+                    addressHtml = `
+                        <div class="info-row">
+                            <span class="info-icon">📍</span>
+                            <span class="info-value">
+                                <a href="${mapUrl}" target="_blank" rel="noopener">${item.address}</a>
+                            </span>
+                        </div>
+                    `;
+                }
+
+                let websiteHtml = '';
+                if (item.website) {
+                    let displayUrl = item.website.replace(/^https?:\/\//i, '');
+                    websiteHtml = `
+                        <div class="info-row">
+                            <span class="info-icon">🌐</span>
+                            <span class="info-value">
+                                <a href="${item.website}" target="_blank" rel="noopener">${displayUrl}</a>
+                            </span>
+                        </div>
+                    `;
+                }
+
+                let contactPersonHtml = '';
+                if (item.contact_person) {
+                    contactPersonHtml = `
+                        <div class="info-row">
+                            <span class="info-icon">👤</span>
+                            <span class="info-value">${item.contact_person}</span>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="entity-name">${item.name}</h3>
+                        <span class="category-tag ${tagClass}">${item.category}</span>
+                    </div>
+                    <div class="card-body">
+                        ${contactPersonHtml}
+                        ${emailHtml}
+                        ${phoneHtml}
+                        ${websiteHtml}
+                        ${addressHtml}
+                    </div>
+                    <div class="card-footer">
+                        <span class="source-tag">Source: ${item.source}</span>
+                        <button class="quick-action-btn" onclick="copyCardData(this)" data-name="${item.name.replace(/"/g, '&quot;')}" data-details="${(item.email + ' ' + item.phone).trim()}">Copy Info</button>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            // Expose clipboard handlers to window scope
+            window.copyToClipboard = function(text, successMsg) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(successMsg);
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            };
+
+            window.copyCardData = function(button) {
+                const name = button.getAttribute('data-name');
+                const details = button.getAttribute('data-details');
+                const textToCopy = `${name} - ${details}`;
+                copyToClipboard(textToCopy, `Contact details for ${name} copied!`);
+            };
+
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+            }
+        }
+    </script>
+</body>
+</html>
